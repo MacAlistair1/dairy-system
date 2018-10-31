@@ -75,6 +75,10 @@ class CalculateController extends Controller
                 $nitFat += $eveMilk->fat_point;
             }
 
+            if(count($mrngMilks) == 0){
+                return redirect('/calculate-my-money')->with('error', 'हिसाब उपलब्ध छैन|');
+            }
+
             $totalMilk = $dayMilk + $nitMilk;
             $totalFat = $dayFat + $nitFat;
             $avgFat = $totalFat/count($mrngMilks);

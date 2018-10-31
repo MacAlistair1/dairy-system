@@ -48,46 +48,46 @@ Tip 3: you can change the color of the sidebar with data-background-color="white
         @endif
         @if (!Auth::guest())
         <ul class="nav">
-            <li class="active">
+            <li class="{{  Request::url() == url('/home') ? 'active' : '' }}">
                 <a href="/home">
                     <i class="material-icons"></i>
                     <p><b>ड्यासबोर्ड</b></p>
                 </a>
             </li>
            
-            <li class="">
+            <li class="{{ Request::url() == url('/change-fat') ? 'active' : '' }}">
                     <a href="/change-fat">
                         <i class="material-icons"></i>
                         <p><b>फ्याटको मुल्य परिवर्तन गर्नुहोस्</b></p>
                     </a>
                 </li>
 
-                    <li>
-                            <a data-toggle="collapse" href="#customer">
-                                <i class="material-icons"></i>
-                                <p><b>ग्राहक</b>
-                                    <b class="caret"></b>
-                                </p>
-                            </a>
-                          
-                            <div class="collapse" id="customer">
-                                    <ul class="nav">
-                                        <li>
-                                            <a href="/add-customer">
-                                                <span class="sidebar-mini">AC</span>
-                                                <span class="sidebar-normal">नयाँ ग्राहक थप्नुहोस</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                                <a href="/manage-customer">
-                                                    <span class="sidebar-mini">UP</span>
-                                                    <span class="sidebar-normal">ग्राहक ब्यबस्थापन गर्नुहोस्</span>
-                                                </a>
-                                            </li>
-                                    </ul>
-                                </div>
+                <li>
+                <a data-toggle="collapse" href="#customer">
+                    <i class="material-icons"></i>
+                    <p><b>ग्राहक</b>
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                
+                <div class="collapse" id="customer">
+                        <ul class="nav">
+                            <li class="{{ Request::url() == url('/add-customer') ? 'active' : '' }}">
+                                <a href="/add-customer">
+                                    <span class="sidebar-mini">AC</span>
+                                    <span class="sidebar-normal">नयाँ ग्राहक थप्नुहोस</span>
+                                </a>
+                            </li>
+                            <li class="{{ Request::url() == url('/manage-customer') ? 'active' : '' }}">
+                                    <a href="/manage-customer">
+                                        <span class="sidebar-mini">UP</span>
+                                        <span class="sidebar-normal">ग्राहक ब्यबस्थापन गर्नुहोस्</span>
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
             
-                        </li>
+                </li>
             
             <li>
                     <a data-toggle="collapse" href="#news">
@@ -99,13 +99,13 @@ Tip 3: you can change the color of the sidebar with data-background-color="white
                   
                     <div class="collapse" id="news">
                             <ul class="nav">
-                                <li>
+                                <li class="{{ Request::url() == url('/add-morning-milk') ? 'active' : '' }}">
                                     <a href="/add-morning-milk">
                                         <span class="sidebar-mini">MM</span>
                                         <span class="sidebar-normal">बिहानको दुध</span>
                                     </a>
                                 </li>
-                                <li>
+                                <li class="{{ Request::url() == url('/add-evening-milk') ? 'active' : '' }}">
                                         <a href="/add-evening-milk">
                                             <span class="sidebar-mini">EM</span>
                                             <span class="sidebar-normal">बेलुकाको दुध</span>
@@ -116,21 +116,21 @@ Tip 3: you can change the color of the sidebar with data-background-color="white
     
                 </li>
 
-                <li class="">
+                <li class="{{ Request::url() == url('/see-milk') ? 'active' : '' }} {{ Request::url() == url('/search') ? 'active' : '' }}">
                         <a href="/see-milk">
                             <i class="material-icons"></i>
                             <p><b>आजको दुध हेर्नुहोस्</b></p>
                         </a>
                     </li>
 
-                <li class="">
+                <li class="{{ Request::url() == url('/calculate-my-money') ? 'active' : '' }} {{ Request::url() == url('/calculate-money') ? 'active' : '' }}">
                         <a href="/calculate-my-money">
                             <i class="material-icons"></i>
                             <p><b>हिसाब गर्नुहोस्</b></p>
                         </a>
                     </li>
             
-                    <li class="">
+                    <li class="{{ Request::url() == url('/history') ? 'active' : '' }} {{ Request::url() == url('/customer-history') ? 'active' : '' }}">
                         <a href="/history">
                             <i class="material-icons"></i>
                             <p><b>पुरानो हिसाब हेर्नुहोस्</b></p>
