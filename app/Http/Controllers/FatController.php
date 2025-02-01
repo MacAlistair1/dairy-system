@@ -36,7 +36,7 @@ class FatController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'fat_rate' => 'required|max:3'
+            'fat_rate' => 'required|numeric'
         ]);
 
         $fat = Fat::first();

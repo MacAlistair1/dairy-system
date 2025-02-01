@@ -1,6 +1,8 @@
 <?php
 
 use App\History;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +18,9 @@ use App\History;
 Route::get('/', function(){
         return view('pages.login');
 });
+
 Auth::routes();
- 
+
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/change-fat', 'HomeController@changeFat')->name('fat');
 Route::get('/add-customer', 'HomeController@addcustomer')->name('add.customer');
@@ -32,7 +35,7 @@ Route::get('delete-history/{id}', function($id){
         $history = History::where('id', $id)->first();
         $history->delete();
 
-        return redirect('/history')->with('success', 'ग्राहक हिस्टोरी हटाइयो|');    
+        return redirect('/history')->with('success', 'ग्राहक हिस्टोरी हटाइयो|');
 });
 
 
