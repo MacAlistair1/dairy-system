@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -37,12 +37,11 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'customer_id' => 'required|max:3|unique:customers',
+            'customer_id' => 'required|max:3|unique:customers,customer_id',
             'name' => 'required',
-            'contact' => 'required|max:15|min:10',
-            
+            'contact' => 'nullable|digits_between:10,15|numeric',
         ]);
-        
+
         $customer = new Customer;
         $customer->customer_id = $request->customer_id;
         $customer->name = $request->name;
@@ -50,7 +49,6 @@ class CustomerController extends Controller
         $customer->save();
 
         return redirect('/add-customer')->with('success', 'नयाँ ग्राहक थपियो|');
-
     }
 
     /**
@@ -94,16 +92,15 @@ class CustomerController extends Controller
             'customer_id' => 'required|max:3',
             'name' => 'required',
             'contact' => 'required|max:15|min:10',
-            
+
         ]);
 
         DB::table('customers')
-                    ->where('customer_id', $id)
-                    ->update(['customer_id' => $request->customer_id, 'name' => $request->name, 'contact' => $request->contact]);
+            ->where('customer_id', $id)
+            ->update(['customer_id' => $request->customer_id, 'name' => $request->name, 'contact' => $request->contact]);
 
 
         return redirect('/manage-customer')->with('success', 'ग्राहकको सुचना परिवर्तन गरियो|');
-
     }
 
     /**
@@ -116,8 +113,8 @@ class CustomerController extends Controller
     {
 
         DB::table('customers')
-                    ->where(['customer_id' => $id])
-                    ->delete();
+            ->where(['customer_id' => $id])
+            ->delete();
 
         return redirect('/manage-customer')->with('success', 'ग्राहक हटाइयो|');
     }

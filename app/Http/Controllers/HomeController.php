@@ -67,7 +67,7 @@ class HomeController extends Controller
 
     public function seemilk()
     {
-        date_default_timezone_set('Asia/Karachi');
+        date_default_timezone_set('Asia/Kathmandu');
         $now = new DateTime(date("Y-m-d"));
 
         $mrngmilks = MorningMilk::where('insert_date', $now)->orderBy('customer_id', 'asc')->get();
@@ -79,7 +79,7 @@ class HomeController extends Controller
     public function calculate()
     {
         $title = "दुधको हिसाब";
-        return view('pages.calculatemilk')->with(['title' => $title, 'customer' => 'null']);
+        return view('pages.calculatemilk')->with(['title' => $title, 'customer' => 'null', 'mrngmilks' => [], 'evemilks' => []]);
     }
 
     public function history()
@@ -87,5 +87,5 @@ class HomeController extends Controller
         $title = "पुरानो हिसाब";
         return view('pages.history')->with(['title' => $title, 'histories' => 'null']);
     }
-   
+
 }

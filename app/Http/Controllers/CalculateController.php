@@ -48,23 +48,22 @@ class CalculateController extends Controller
         $totalMoney = null;
         $search = $request->input('keyword');
         $title = "ग्राहक:".$search;
-        
+
         if ($search != null) {
             $customer = Customer::where('customer_id', $search)
                                     ->orWhere('name', $search)
                                     ->orWhere('contact', $search)->first();
 
             if ($customer == null) {
-                return redirect('/calculate-my-money')->with('error', 'डाटा प्राप्त भएन|');                
+                return redirect('/calculate-my-money')->with('error', 'डाटा प्राप्त भएन|');
             }
 
-            $mrngMilks = MorningMilk::where('customer_id', $customer->customer_id)->orderBy('insert_date', 'asc')->take(15)->get();                        
-            $eveMilks = EveningMilk::where('customer_id', $customer->customer_id)->orderBy('insert_date', 'asc')->take(15)->get();    
+            $mrngMilks = MorningMilk::where('customer_id', $customer->customer_id)->orderBy('insert_date', 'asc')->take(15)->get();
+            $eveMilks = EveningMilk::where('customer_id', $customer->customer_id)->orderBy('insert_date', 'asc')->take(15)->get();
 
-            //if($mrngMilks == null)
 
-            $fat = Fat::first();              
-            
+            $fat = Fat::first();
+
             foreach($mrngMilks as $mrngMilk){
                 $dayMilk += $mrngMilk->milk_qt;
                 $dayFat += $mrngMilk->fat_point;
@@ -85,11 +84,9 @@ class CalculateController extends Controller
             $totalMoney = $totalMilk * $avgFat*($fat->fat_rate);
 
 
-
-
-            return view('pages.calculatemilk')->with(['title' => $title, 
-                                                        'customer' => $customer, 
-                                                        'mrngMilk' => $dayMilk, 
+            return view('pages.calculatemilk')->with(['title' => $title,
+                                                        'customer' => $customer,
+                                                        'mrngMilk' => $dayMilk,
                                                         'mrngFat' => $dayFat,
                                                         'eveMilk' => $nitMilk,
                                                         'eveFat' => $nitFat,
@@ -98,7 +95,9 @@ class CalculateController extends Controller
                                                         'avgFat' => round($avgFat, 2),
                                                         'totalMoney' => round($totalMoney),
                                                         'fat_rate' => $fat->fat_rate,
-                                                        'totDay' => count($mrngMilks)
+                                                        'totDay' => count($mrngMilks),
+                                                        'mrngmilks' => $mrngMilks,
+                                                        'evemilks' => $eveMilks
                                                         ]);
 
         }
