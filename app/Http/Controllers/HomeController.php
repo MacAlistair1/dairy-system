@@ -79,7 +79,7 @@ class HomeController extends Controller
     public function calculate()
     {
         $title = "दुधको हिसाब";
-        return view('pages.calculatemilk')->with(['title' => $title, 'customer' => 'null', 'mrngmilks' => [], 'evemilks' => []]);
+        return view('pages.calculatemilk')->with(['title' => $title, 'customer' => 'null', 'mrngmilks' => [], 'evemilks' => [], 'advanceAmounts' => []]);
     }
 
     public function history()

@@ -30,6 +30,7 @@ Route::get('/add-evening-milk', 'HomeController@addevemilk')->name('add.evening-
 Route::get('/see-milk', 'HomeController@seemilk')->name('see.milk');
 Route::get('/calculate-my-money', 'HomeController@calculate')->name('calculate');
 Route::get('/history', 'HomeController@history')->name('history');
+Route::get('/advance-amount', 'HomeController@addAdvance')->name('advance-amount');
 
 Route::get('delete-history/{id}', function($id){
         $history = History::where('id', $id)->first();
@@ -46,3 +47,5 @@ Route::resource('/milk-evening', 'EveningMilkController');
 Route::resource('/search', 'SearchController');
 Route::resource('/calculate-money', 'CalculateController');
 Route::resource('/customer-history', 'HistoryController');
+Route::resource('/advance-amount', 'AdvanceAmountController');
+

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHistoriesTable extends Migration
+class CreateAdvancesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateHistoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('histories', function (Blueprint $table) {
+        Schema::create('advances', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('customer_id')->unsigned()->index();
             $table->foreign('customer_id')->references('customer_id')->on('customers')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('total_milk');
-            $table->string('avg_fat');
-            $table->string('total_Money');
-            $table->string('settled_adv_amount');
-            $table->string('to_from_date');
+            $table->integer('amount');
+            $table->boolean('settled')->default(0);
+            $table->text('remarks');
+            $table->date('insert_date');
+            $table->date('settle_date')->nullable();
         });
     }
 
@@ -32,6 +32,6 @@ class CreateHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('histories');
+        Schema::dropIfExists('advances');
     }
 }

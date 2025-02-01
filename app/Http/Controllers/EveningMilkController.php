@@ -38,9 +38,9 @@ class EveningMilkController extends Controller
      */
     public function store(Request $request)
     {
-        date_default_timezone_set('Asia/Karachi');
+        date_default_timezone_set('Asia/Kathmandu');
         $now = new DateTime(date("Y-m-d"));
-        
+
         $this->validate($request, [
             'customer_id' => 'required',
             'milk_qt' => 'required',
@@ -50,11 +50,11 @@ class EveningMilkController extends Controller
         $customer = Customer::where('customer_id', $request->customer_id)->first();
 
         if ($customer == null) {
-            return redirect('/add-evening-milk')->with('error', 'यो नम्बरको कोहिपनि ग्रहक छैन|');            
+            return redirect('/add-evening-milk')->with('error', 'यो नम्बरको कोहिपनि ग्राहक छैन|');
         }
 
         $oldEveMilk = EveningMilk::where(['insert_date' => $now, 'customer_id' => $request->customer_id])->first();
-       
+
         if ($oldEveMilk != null) {
             $oldEveMilk->customer_id = $request->customer_id;
             $oldEveMilk->milk_qt = $request->milk_qt;

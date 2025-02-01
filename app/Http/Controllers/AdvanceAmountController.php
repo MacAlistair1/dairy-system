@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Advance;
 use DateTime;
 use App\Customer;
 use App\EveningMilk;
 use App\MorningMilk;
 use Illuminate\Http\Request;
 
-class MorningMilkController extends Controller
+class AdvanceAmountController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +18,8 @@ class MorningMilkController extends Controller
      */
     public function index()
     {
-        //
+        $title = "अग्रिम रकम";
+        return view('pages.advance')->with(['title' => $title]);
     }
 
     /**
@@ -43,44 +45,24 @@ class MorningMilkController extends Controller
 
         $this->validate($request, [
             'customer_id' => 'required',
-            'milk_qt' => 'required',
-            'fat_point' => 'required'
+            'amount' => 'required',
+            'remarks' => 'required'
         ]);
 
         $customer = Customer::where('customer_id', $request->customer_id)->first();
 
         if ($customer == null) {
-            return redirect('/add-morning-milk')->with('error', 'यो नम्बरको कोहिपनि ग्राहक छैन|');
+            return redirect('/advance-amount')->with('error', 'यो नम्बरको कोहिपनि ग्राहक छैन|');
         }
 
-        $oldMrngMilk = MorningMilk::where(['insert_date' => $now, 'customer_id' => $request->customer_id])->first();
+        $advance = new Advance;
+        $advance->customer_id = $request->customer_id;
+        $advance->amount = $request->amount;
+        $advance->remarks = $request->remarks;
+        $advance->insert_date = $now;
+        $advance->save();
 
-        if ($oldMrngMilk != null) {
-            $oldMrngMilk->customer_id = $request->customer_id;
-            $oldMrngMilk->milk_qt = $request->milk_qt;
-            $oldMrngMilk->fat_point = $request->fat_point;
-            $oldMrngMilk->insert_date = $now;
-            $oldMrngMilk->save();
-
-            return redirect('/add-morning-milk')->with('success', 'दुध थपियो|');
-        }
-
-
-        $morningMilk = new MorningMilk;
-        $morningMilk->customer_id = $request->customer_id;
-        $morningMilk->milk_qt = $request->milk_qt;
-        $morningMilk->fat_point = $request->fat_point;
-        $morningMilk->insert_date = $now;
-        $morningMilk->save();
-
-        $eveningMilk = new EveningMilk;
-        $eveningMilk->customer_id = $request->customer_id;
-        $eveningMilk->milk_qt = "0";
-        $eveningMilk->fat_point = "0";
-        $eveningMilk->insert_date = $now;
-        $eveningMilk->save();
-
-        return redirect('/add-morning-milk')->with('success', 'दुध थपियो|');
+        return redirect('/advance-amount')->with('success', 'ग्राहकलाई दिएको अग्रिम रकम/सामान थपियो|');
 
     }
 

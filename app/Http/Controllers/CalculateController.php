@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Fat;
+use App\Advance;
 use App\Customer;
 use App\EveningMilk;
+use App\Fat;
 use App\MorningMilk;
 use Illuminate\Http\Request;
 
@@ -38,71 +38,85 @@ class CalculateController extends Controller
      */
     public function store(Request $request)
     {
-        $dayMilk = null;
-        $dayFat = null;
-        $nitMilk = null;
-        $nitFat = null;
-        $avgFat = null;
-        $totalMilk = null;
-        $totalFat = null;
+        $dayMilk    = null;
+        $dayFat     = null;
+        $nitMilk    = null;
+        $nitFat     = null;
+        $avgFat     = null;
+        $totalMilk  = null;
+        $totalFat   = null;
         $totalMoney = null;
-        $search = $request->input('keyword');
-        $title = "ग्राहक:".$search;
+        $search     = $request->input('keyword');
+        $title      = "ग्राहक:" . $search;
 
         if ($search != null) {
             $customer = Customer::where('customer_id', $search)
-                                    ->orWhere('name', $search)
-                                    ->orWhere('contact', $search)->first();
+                ->orWhere('name', $search)
+                ->orWhere('contact', $search)->first();
 
             if ($customer == null) {
                 return redirect('/calculate-my-money')->with('error', 'डाटा प्राप्त भएन|');
             }
 
             $mrngMilks = MorningMilk::where('customer_id', $customer->customer_id)->orderBy('insert_date', 'asc')->take(15)->get();
-            $eveMilks = EveningMilk::where('customer_id', $customer->customer_id)->orderBy('insert_date', 'asc')->take(15)->get();
+            $eveMilks  = EveningMilk::where('customer_id', $customer->customer_id)->orderBy('insert_date', 'asc')->take(15)->get();
 
+            $advanceAmounts = Advance::where('customer_id', $customer->customer_id)->where('settled', 0)->orderBy('insert_date', 'asc')->get();
+
+            $totalAdvanceAmount = Advance::where('customer_id', $customer->customer_id)
+                ->where('settled', 0)
+                ->sum('amount');
 
             $fat = Fat::first();
 
-            foreach($mrngMilks as $mrngMilk){
+            foreach ($mrngMilks as $mrngMilk) {
                 $dayMilk += $mrngMilk->milk_qt;
                 $dayFat += $mrngMilk->fat_point;
             }
 
-            foreach($eveMilks as $eveMilk){
+            foreach ($eveMilks as $eveMilk) {
                 $nitMilk += $eveMilk->milk_qt;
                 $nitFat += $eveMilk->fat_point;
             }
 
-            if(count($mrngMilks) == 0){
-                return redirect('/calculate-my-money')->with('error', 'हिसाब उपलब्ध छैन|');
+            if (count($mrngMilks) > 0) {
+                $totalMilk  = $dayMilk + $nitMilk;
+                $totalFat   = $dayFat + $nitFat;
+                $avgFat     = $totalFat / count($mrngMilks);
+                $totalMoney = $totalMilk * $avgFat * ($fat->fat_rate);
+            }else if (count($eveMilks) > 0) {
+                $totalMilk  = $dayMilk + $nitMilk;
+                $totalFat   = $dayFat + $nitFat;
+                $avgFat     = $totalFat / count($eveMilks);
+                $totalMoney = $totalMilk * $avgFat * ($fat->fat_rate);
+            }else{
+                $totalMilk  = $dayMilk + $nitMilk;
+                $totalFat   = $dayFat + $nitFat;
+                $avgFat     = 0;
             }
 
-            $totalMilk = $dayMilk + $nitMilk;
-            $totalFat = $dayFat + $nitFat;
-            $avgFat = $totalFat/count($mrngMilks);
-            $totalMoney = $totalMilk * $avgFat*($fat->fat_rate);
 
-
-            return view('pages.calculatemilk')->with(['title' => $title,
-                                                        'customer' => $customer,
-                                                        'mrngMilk' => $dayMilk,
-                                                        'mrngFat' => $dayFat,
-                                                        'eveMilk' => $nitMilk,
-                                                        'eveFat' => $nitFat,
-                                                        'totalMilk' => $totalMilk,
-                                                        'totalFat' => $totalFat,
-                                                        'avgFat' => round($avgFat, 2),
-                                                        'totalMoney' => round($totalMoney),
-                                                        'fat_rate' => $fat->fat_rate,
-                                                        'totDay' => count($mrngMilks),
-                                                        'mrngmilks' => $mrngMilks,
-                                                        'evemilks' => $eveMilks
-                                                        ]);
-
+            return view('pages.calculatemilk')->with([
+                'title'      => $title,
+                'customer'   => $customer,
+                'mrngMilk'   => $dayMilk,
+                'mrngFat'    => $dayFat,
+                'eveMilk'    => $nitMilk,
+                'eveFat'     => $nitFat,
+                'totalMilk'  => $totalMilk,
+                'totalFat'   => $totalFat,
+                'avgFat'     => round($avgFat, 2),
+                'totalMoney' => round($totalMoney),
+                'fat_rate'   => $fat->fat_rate,
+                'totDay'     => count($mrngMilks),
+                'mrngmilks'  => $mrngMilks,
+                'evemilks'   => $eveMilks,
+                'advanceAmounts' => $advanceAmounts,
+                'totalAdvanceAmount' => $totalAdvanceAmount
+            ]);
         }
 
-        if($search == null){
+        if ($search == null) {
             return redirect('/calculate-my-money')->with('error', 'डाटा प्राप्त भएन|');
         }
     }
