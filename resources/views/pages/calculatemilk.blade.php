@@ -84,12 +84,14 @@
                     </div>
                     @endif
 
-                    @if (count($mrngmilks) > 0)
+                    @if (count($groupedMilkData) > 0)
                     <table class="table table-striped pull-left">
                         <caption style="font-size:15pt;font-weight:bold;color:blue;"> दुधको विवरण | जम्मा दिन: {{
-                            changeDigit(count($mrngmilks)) }}</caption>
+                            changeDigit(count($groupedMilkData)) }} | <b style="color: red;">{{ $startDate }}</b> देखी <b style="color: red;">{{ $endDate }}</b> सम्म
+                        </caption>
+
                         <tr>
-                            <th>क्र.सं</th>
+                            <th>मिति</th>
                             <th colspan="2">बिहानको</th>
                             <th colspan="2">बेलुकाको</th>
                         </tr>
@@ -103,43 +105,46 @@
                         <?php $daymilk = 0; $nitmilk = 0; ?>
                         <?php $dayfat = 0; $nitfat = 0; ?>
 
-                        @foreach ($mrngmilks as $index=>$mrngmilk)
-                        @if (count($evemilks) == 0)
+                        @foreach ($groupedMilkData as $index=>$milk)
                         <tr style="font-weight:bold;font-size:15pt;">
-                            <td>{{ changeDigit(++$index) }}</td>
-                            <td>{{ changeDigit($mrngmilk->milk_qt) }}</td>
-                            <td>{{ changeDigit($mrngmilk->fat_point) }}</td>
-                            <td>{{ changeDigit(0) }}</td>
-                            <td>{{ changeDigit(0) }}</td>
-                        </tr>
-                        <?php
-                                                $daymilk+= $mrngmilk->milk_qt;
-                                                $nitmilk+= 0;
-                                                $dayfat+= $mrngmilk->fat_point;
-                                                $nitfat+= 0;
-                                            ?>
-                        @else
-                        @foreach ($evemilks as $index=>$evemilk)
-                        @if ($mrngmilk->customer_id == $evemilk->customer_id)
-                        <tr style="font-weight:bold;font-size:15pt;">
-                            <td>{{ changeDigit(++$index) }}</td>
-                            <td>{{ changeDigit($mrngmilk->milk_qt) }}</td>
-                            <td>{{ changeDigit($mrngmilk->fat_point) }}</td>
-                            <td>{{ changeDigit($evemilk->milk_qt) }}</td>
-                            <td>{{ changeDigit($evemilk->fat_point) }}</td>
-                        </tr>
-                        <?php
-                                                    $daymilk+= $mrngmilk->milk_qt;
-                                                    $nitmilk+= $evemilk->milk_qt;
-                                                    $dayfat+= $mrngmilk->fat_point;
-                                                    $nitfat+= $evemilk->fat_point;
-                                                ?>
-                        @endif
 
-                        @endforeach
-                        @endif
+                            @if (!$milk[0])
+                            <td>{{ $milk[1]->np_date }}</td>
+                            @else
+                            <td>{{ $milk[0]->np_date }}</td>
+                            @endif
 
+                            @if (!isset($milk[1]))
+                            <td>--</td>
+                            <td>--</td>
+                            @else
+                            <td>{{ changeDigit($milk[1]->milk_qt) }}</td>
+                            <td>{{ changeDigit($milk[1]->fat_point) }}</td>
+                            @endif
+
+
+                            @if (!isset($milk[0]))
+                            <td>--</td>
+                            <td>--</td>
+                            @else
+                            <td>{{ changeDigit($milk[0]->milk_qt) }}</td>
+                            <td>{{ changeDigit($milk[0]->fat_point) }}</td>
+                            @endif
+                        </tr>
+
+                        <?php
+                        if (isset($milk[1])) {
+                            $daymilk+= $milk[1]->milk_qt;
+                            $dayfat+= $milk[1]->fat_point;
+                        }
+
+                        if (isset($milk[0])) {
+                            $nitmilk+= $milk[0]->milk_qt;
+                            $nitfat+= $milk[0]->fat_point;
+                        }
+                        ?>
                         @endforeach
+
                         <tr style="font-weight:bold;font-size:17pt;color:red;">
                             <td>जम्मा</td>
                             <td>{{ changeDigit($daymilk)." लिटर" }}</td>
@@ -147,6 +152,7 @@
                             <td>{{ changeDigit($nitmilk)." लिटर" }}</td>
                             <td>{{ changeDigit($nitfat) }}</td>
                         </tr>
+
                     </table>
                     @endif
 
@@ -154,14 +160,14 @@
                     <table class="table table-striped pull-left" style="margin-top: 30px;">
                         <caption style="font-size:15pt;font-weight:bold;color:blue;">पेश्की रकम विवरण</caption>
                         <tr>
-                            <th>क्र.सं</th>
+                            <th>मिति</th>
                             <th>रकम</th>
                             <th>टिप्पणी</th>
                         </tr>
 
                         @foreach ($advanceAmounts as $index=>$advAmt)
                         <tr style="font-weight:bold;font-size:15pt;">
-                            <td>{{ changeDigit(++$index) }}</td>
+                            <td>{{ $advAmt->np_date }}</td>
                             <td>{{ changeDigit($advAmt->amount) }}</td>
                             <td>{{ $advAmt->remarks }}</td>
                         </tr>

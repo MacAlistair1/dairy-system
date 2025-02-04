@@ -68,18 +68,36 @@ class HomeController extends Controller
     public function seemilk()
     {
         date_default_timezone_set('Asia/Kathmandu');
-        $now = new DateTime(date("Y-m-d"));
+        $now = date("Y-m-d"); // Current date
 
-        $mrngmilks = MorningMilk::where('insert_date', $now)->orderBy('customer_id', 'asc')->get();
-        $evemilks = EveningMilk::where('insert_date', $now)->orderBy('customer_id', 'asc')->get();
+        // Fetch morning milk records
+        $mrngmilks = MorningMilk::select('np_date', 'customer_id', 'milk_qt', 'fat_point')
+            ->where('insert_date', $now);
+
+        // Fetch evening milk records and join with morning records
+        $milkData = EveningMilk::select('np_date', 'customer_id', 'milk_qt', 'fat_point')
+            ->where('insert_date', $now)
+            ->union($mrngmilks)
+            ->orderBy('np_date', 'asc')
+            ->orderBy('customer_id', 'asc')
+            ->get();
+
+        // Grouping by np_date
+        $groupedMilkData = $milkData->groupBy('np_date');
+
         $title = "आजको दुधको लिस्ट";
-        return view('pages.seemilk')->with(['title' => $title, 'mrngmilks' => $mrngmilks, 'evemilks' => $evemilks]);
+
+        return view('pages.seemilk')->with([
+            'title' => $title,
+            'groupedMilkData' => $groupedMilkData
+        ]);
     }
+
 
     public function calculate()
     {
         $title = "दुधको हिसाब";
-        return view('pages.calculatemilk')->with(['title' => $title, 'customer' => 'null', 'mrngmilks' => [], 'evemilks' => [], 'advanceAmounts' => []]);
+        return view('pages.calculatemilk')->with(['title' => $title, 'customer' => 'null', 'groupedMilkData' => [],  'advanceAmounts' => []]);
     }
 
     public function history()

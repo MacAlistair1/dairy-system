@@ -11,6 +11,6 @@
         </div>
     </div>
     @include('admin-inc.fixed-plugin')
-    <script src="{{ asset('js/app.js') }}"></script>
+    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 </body>
 @include('admin-inc.extra-js-file')

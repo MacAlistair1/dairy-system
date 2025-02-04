@@ -27,6 +27,13 @@
                                                     {{ Form::label('title', "फ्याट", ['class' => 'lead', 'style' => 'color:black;font-weight:bold;']) }}
                                                     {{ Form::text('fat_point', '', ['class' => 'form-control lead', 'placeholder' => 'Fat', 'style' => 'color:black;font-size:20pt;']) }}
                                                  </div>
+
+                                                 <div class="form-group">
+                                                    {{ Form::label('title', "मिति", ['class' => 'lead', 'style' =>
+                                                    'color:black;font-weight:bold;']) }}
+                                                    {{ Form::text('np_date', '', ['class' => 'form-control lead np-picker', 'placeholder' => 'मिति', 'style'
+                                                    => 'color:black;font-size:20pt;']) }}
+                                                </div>
                                         {{ Form::submit('थप्नुहोस', ['class' => 'btn btn-primary btn-lg']) }}
                                         {!! Form::close() !!}
                                 </div>

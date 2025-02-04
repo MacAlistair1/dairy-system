@@ -44,7 +44,8 @@ class EveningMilkController extends Controller
         $this->validate($request, [
             'customer_id' => 'required',
             'milk_qt' => 'required',
-            'fat_point' => 'required'
+            'fat_point' => 'required',
+            'np_date' => 'required'
         ]);
 
         $customer = Customer::where('customer_id', $request->customer_id)->first();
@@ -53,13 +54,14 @@ class EveningMilkController extends Controller
             return redirect('/add-evening-milk')->with('error', 'यो नम्बरको कोहिपनि ग्राहक छैन|');
         }
 
-        $oldEveMilk = EveningMilk::where(['insert_date' => $now, 'customer_id' => $request->customer_id])->first();
+        $oldEveMilk = EveningMilk::where(['customer_id' => $request->customer_id, 'np_date' => $request->np_date])->first();
 
         if ($oldEveMilk != null) {
             $oldEveMilk->customer_id = $request->customer_id;
             $oldEveMilk->milk_qt = $request->milk_qt;
             $oldEveMilk->fat_point = $request->fat_point;
             $oldEveMilk->insert_date = $now;
+            $oldEveMilk->np_date = $request->np_date;
             $oldEveMilk->save();
 
             return redirect('/add-morning-milk')->with('success', 'दुध थपियो|');
@@ -71,6 +73,7 @@ class EveningMilkController extends Controller
         $eveningMilk->milk_qt = $request->milk_qt;
         $eveningMilk->fat_point = $request->fat_point;
         $eveningMilk->insert_date = $now;
+        $eveningMilk->np_date = $request->np_date;
         $eveningMilk->save();
 
         $morningMilk = new MorningMilk;
@@ -78,6 +81,7 @@ class EveningMilkController extends Controller
         $morningMilk->milk_qt = "0";
         $morningMilk->fat_point = "0";
         $morningMilk->insert_date = $now;
+        $morningMilk->np_date = $request->np_date;
         $morningMilk->save();
 
         return redirect('/add-evening-milk')->with('success', 'दुध थपियो|');

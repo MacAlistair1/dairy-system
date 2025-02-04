@@ -46,7 +46,8 @@ class AdvanceAmountController extends Controller
         $this->validate($request, [
             'customer_id' => 'required',
             'amount' => 'required',
-            'remarks' => 'required'
+            'remarks' => 'required',
+            'np_date' => 'required'
         ]);
 
         $customer = Customer::where('customer_id', $request->customer_id)->first();
@@ -60,6 +61,7 @@ class AdvanceAmountController extends Controller
         $advance->amount = $request->amount;
         $advance->remarks = $request->remarks;
         $advance->insert_date = $now;
+        $advance->np_date = $request->np_date;
         $advance->save();
 
         return redirect('/advance-amount')->with('success', 'ग्राहकलाई दिएको अग्रिम रकम/सामान थपियो|');

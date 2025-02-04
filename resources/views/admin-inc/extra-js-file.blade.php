@@ -6,8 +6,9 @@
 <!-- Library for adding dinamically elements -->
 <script src="{{ asset('js/arrive.min.js') }}" type="text/javascript"></script>
 <!-- Forms Validations Plugin -->
-<script src="{{ asset('js/jquery.validate.min.js') }}"</script>
-<!-- Promise Library for SweetAlert2 working on IE -->
+<script src="{{ asset('js/jquery.validate.min.js') }}" </script>
+    <!-- Promise Library for SweetAlert2 working on IE
+    -->
 <script src="{{ asset('js/es6-promise-auto.min.js') }}"></script>
 <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
 <script src="{{ asset('js/moment.min.js') }}"></script>
@@ -40,15 +41,18 @@
 <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
 <script src="{{ asset('js/jquery.tagsinput.js') }}"></script>
 <!-- Material Dashboard javascript methods -->
-<script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
+// <script src="{{ asset('js/material-dashboard.js') }}"></script>
 
-        // Javascript method's body can be found in assets/js/demos.js
-        demo.initDashboardPageCharts();
 
-        demo.initVectorMap();
-    });
+<script src="//code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+<script src="//unpkg.com/nepali-date-picker@2.0.2/dist/nepaliDatePicker.min.js"></script>
+
+{{-- %D, %M %d, %y --}}
+<script>
+    $(".np-picker").nepaliDatePicker({
+    dateFormat: "%M %d, %y",
+    closeOnDateSelect: true
+});
 </script>
 
 </html>

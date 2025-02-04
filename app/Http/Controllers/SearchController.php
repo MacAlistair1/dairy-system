@@ -16,7 +16,6 @@ class SearchController extends Controller
     public function index()
     {
         return redirect('/see-milk')->with('error', 'डाटा प्राप्त भएन|');
-        
     }
 
     /**
@@ -38,15 +37,29 @@ class SearchController extends Controller
     public function store(Request $request)
     {
         $search = $request->input('keyword');
-    
-        if($search != null){
-            $mrngMilks = MorningMilk::where('customer_id', $search)->get();
-            $eveMilks = EveningMilk::where('customer_id', $search)->get();
-            
-            return view('pages.seemilk')->with(['title' =>'खोजि गरिएको: '.$search, 'mrngmilks' => $mrngMilks, 'evemilks' => $eveMilks]);
+
+        if ($search != null) {
+
+            // Fetch morning milk records
+            $mrngmilks = MorningMilk::select('np_date', 'customer_id', 'milk_qt', 'fat_point')
+                ->where('customer_id', $search);
+
+            // Fetch evening milk records and join with morning records
+            $milkData = EveningMilk::select('np_date', 'customer_id', 'milk_qt', 'fat_point')
+                ->where('customer_id', $search)
+                ->union($mrngmilks)
+                ->orderBy('np_date', 'asc')
+                ->orderBy('customer_id', 'asc')
+                ->get();
+
+            // Grouping by np_date
+            $groupedMilkData = $milkData->groupBy('np_date');
+
+
+            return view('pages.seemilk')->with(['title' => 'खोजि गरिएको: ' . $search, 'groupedMilkData' => $groupedMilkData]);
         }
 
-        if($search == null){
+        if ($search == null) {
             return redirect('/see-milk')->with('error', 'डाटा प्राप्त भएन|');
         }
     }

@@ -27,6 +27,12 @@
                                                     {{ Form::label('title', "टिप्पणी", ['class' => 'lead', 'style' => 'color:black;font-weight:bold;']) }}
                                                     {{ Form::text('remarks', '', ['class' => 'form-control lead', 'placeholder' => 'सामानको विवरण वा रकमको टिप्पणी (नेपाली मिति सहित)', 'style' => 'color:black;font-size:20pt;']) }}
                                                  </div>
+                                                 <div class="form-group">
+                                                    {{ Form::label('title', "मिति", ['class' => 'lead', 'style' =>
+                                                    'color:black;font-weight:bold;']) }}
+                                                    {{ Form::text('np_date', '', ['class' => 'form-control lead np-picker', 'placeholder' => 'मिति', 'style'
+                                                    => 'color:black;font-size:20pt;']) }}
+                                                </div>
                                         {{ Form::submit('थप्नुहोस', ['class' => 'btn btn-primary btn-lg']) }}
                                         {!! Form::close() !!}
                                 </div>
