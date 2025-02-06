@@ -84,19 +84,19 @@ class CustomerController extends Controller
      * @param  \App\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $customerId)
     {
-        $customer = Customer::where('customer_id', $id)->first();
+
+        $customer = Customer::where('customer_id', $customerId)->first();
 
         $this->validate($request, [
-            'customer_id' => 'required|max:3|unique:customers,customer_id,' . $customer->customer_id,
+            'customer_id' => 'required|max:3|unique:customers,customer_id,' . $customer->customer_id . ',customer_id',
             'name' => 'required',
             'contact' => 'required|max:15|min:10',
-
         ]);
 
         DB::table('customers')
-            ->where('customer_id', $id)
+            ->where('customer_id', $customerId)
             ->update(['customer_id' => $request->customer_id, 'name' => $request->name, 'contact' => $request->contact]);
 
 
