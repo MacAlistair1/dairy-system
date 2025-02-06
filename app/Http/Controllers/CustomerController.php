@@ -89,7 +89,7 @@ class CustomerController extends Controller
         $customer = Customer::where('customer_id', $id)->first();
 
         $this->validate($request, [
-            'customer_id' => 'required|max:3',
+            'customer_id' => 'required|max:3|unique:customers,customer_id,' . $customer->customer_id,
             'name' => 'required',
             'contact' => 'required|max:15|min:10',
 
